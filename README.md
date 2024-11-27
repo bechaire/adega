@@ -14,4 +14,5 @@
 ### Para iniciar o projeto, considerando atendidos os requisitos acima, execute:
 * No diretório base do projeto: `./start.sh`
 * O `symfony server:start` iniciará, e um `docker compose up -d` para o banco de dados será acionado, será usada a porta `32370` do localhost pra isso
+* O `app` provavelmente estará rodando em https://127.0.0.1:8000
 * Alguns pacotes serão instalados via composer

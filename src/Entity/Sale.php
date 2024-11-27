@@ -1,4 +1,6 @@
-<?php declare(strict_types=1); 
+<?php
+
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -38,7 +40,7 @@ class Sale
     {
         return $this->id;
     }
-    
+
     /**
      * @return Collection<int, SaleItem>
      */
@@ -91,5 +93,4 @@ class Sale
     {
         $this->updated_at = new \DateTimeImmutable();
     }
-
 }
