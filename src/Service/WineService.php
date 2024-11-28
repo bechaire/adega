@@ -55,7 +55,7 @@ final class WineService
     {
         $data = array_change_key_case($data, CASE_LOWER);
 
-        // se os dados vierem parciais, consi
+        // se os dados vierem parciais, considero os valores que já existem no objeto da entidade
         $dto = new WineDto(
             $data['name']        ?? ($isPatch && $wine ? $wine->getName() : ''),
             $data['grape']       ?? ($isPatch && $wine ? $wine->getGrape() : ''),

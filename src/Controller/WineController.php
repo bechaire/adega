@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Dto\WineDto;
 use App\Entity\Wine;
 use App\Exception\InvalidArgumentException;
 use App\Repository\WineRepository;
 use App\Service\ViolationsService;
 use App\Service\WineService;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,8 +24,15 @@ class WineController extends AbstractController
     ) {}
 
     #[Route('/wines', name: 'app_wine_list', methods: ['GET'])]
-    public function listWines(): JsonResponse
+    public function listWines(Request $request): JsonResponse
     {
+        $validQueryFilters = $this->wineRepository->getFilters($request->query->all());
+        if ($validQueryFilters) {
+            return $this->json([
+                'wines' => $this->wineRepository->findBy($validQueryFilters)
+            ]);
+        }
+
         return $this->json([
             'wines' => $this->wineRepository->findAll()
         ]);
@@ -52,11 +57,11 @@ class WineController extends AbstractController
     {
         try {
             $wine = $this->wineService->saveFromRequest($request);
-        } catch(InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->json([
                 'Error' => $e->getMessage()
             ], 400);
-        } catch(ValidationFailedException $e) {
+        } catch (ValidationFailedException $e) {
             return $this->json([
                 'Error' => (new ViolationsService($e))->toArray()
             ], 400);
@@ -78,11 +83,11 @@ class WineController extends AbstractController
 
         try {
             $wine = $this->wineService->saveFromRequest($request, $wine);
-        } catch(InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->json([
                 'Error' => $e->getMessage()
             ], 400);
-        } catch(ValidationFailedException $e) {
+        } catch (ValidationFailedException $e) {
             return $this->json([
                 'Error' => (new ViolationsService($e))->toArray()
             ], 400);
