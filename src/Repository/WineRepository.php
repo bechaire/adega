@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Wine;
@@ -11,33 +13,30 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class WineRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry
+    ) {
         parent::__construct($registry, Wine::class);
     }
 
-//    /**
-//     * @return Wine[] Returns an array of Wine objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('w')
-//            ->andWhere('w.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('w.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function add(Wine $wine, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($wine);
 
-//    public function findOneBySomeField($value): ?Wine
-//    {
-//        return $this->createQueryBuilder('w')
-//            ->andWhere('w.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Wine $wine, bool $flush = false): void
+    {
+        
+        // $wine = $this->getEntityManager()->getReference(Wine::class, $id);
+        
+        $this->getEntityManager()->remove($wine);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }
