@@ -8,7 +8,6 @@ use App\Entity\Wine;
 use App\Traits\PropertyQueryFilterTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 /**
  * @extends ServiceEntityRepository<Wine>
