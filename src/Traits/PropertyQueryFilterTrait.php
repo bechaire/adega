@@ -13,6 +13,13 @@ use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
  */
 trait PropertyQueryFilterTrait
 {
+    /**
+     * A partir dos parâmetros de uma query string filtra o que tiver relação com a entidade em associação/uso
+     *
+     * @param array $query Conteúdo da query string em array
+     * @return array Retorna os campos da query que tem relação com campos da entidade, ignorando o que 
+     * estiver "sobrando"
+     */
     public function getFilters(array $query): array
     {
         // pega as propriedades da classe atual
@@ -33,18 +40,29 @@ trait PropertyQueryFilterTrait
         return $this->normalizeAndFilterQueryParams($query, $propertyNames);
     }
 
-    private function normalizeAndFilterQueryParams($query, $propertyNames)
+    /**
+     * Faz o filtro dos query params removendo o que não existir com aquele nome como uma propriedade da entidade
+     *
+     * @param array $query Query string recebida em formato de array
+     * @param array $propertyNames Nomes das propriedades da entidade mapeada
+     * @return array Query params que de fato podem ser filtrados
+     */
+    private function normalizeAndFilterQueryParams(array $query, array $propertyNames): array
     {
+        // Converte de createdAt para created_at, por exemplo
         $normalizer = new CamelCaseToSnakeCaseNameConverter();
+
         $queryNames = array_keys($query);
         foreach ($queryNames as $key) {
             if (array_key_exists($key, $propertyNames)) {
                 continue;
             }
+
             $kSnake = $normalizer->normalize($key);
             if (array_key_exists($kSnake, $propertyNames)) {
                 $query[$kSnake] = $query[$key];
             }
+
             unset($query[$key]);
         }
 

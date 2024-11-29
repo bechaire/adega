@@ -20,6 +20,14 @@ final class WineService
         private ValidatorInterface $validator
     ) {}
 
+    /**
+     * Faz a ação de salvamento (Add e Fetch) para um objeto Wine recebido ou o cria se vazio, 
+     * os dados são coletados do request
+     *
+     * @param Request $request
+     * @param Wine|null $wine
+     * @return Wine
+     */
     public function saveFromRequest(Request $request, ?Wine $wine = null): Wine
     {
         //aceitando json e html form submit
@@ -51,7 +59,16 @@ final class WineService
         return $wine;
     }
 
-    public function createDto(array $data, ?Wine $wine, bool $isPatch): WineDto
+    /**
+     * Cria um DTO a partir de um array de dados recebido, ou por um form HTML ou por um payload JSON,
+     * em seguida faz a validação e lança eventuais excessões
+     *
+     * @param array $data Os dados recebidos do payload
+     * @param Wine|null $wine Um objeto Wine alimentado para servir de valor default para uma ação de PATCH
+     * @param boolean $isPatch Se a requisição é de PATCH, pode vir com campos obrigatórios faltando
+     * @return WineDto Retorna o DTO alimentado
+     */
+    private function createDto(array $data, ?Wine $wine, bool $isPatch): WineDto
     {
         $data = array_change_key_case($data, CASE_LOWER);
 
@@ -75,6 +92,13 @@ final class WineService
         return $dto;
     }
 
+    /**
+     * Atualiza um objeto Wine recebido a partir de um DTO alimentado e validado
+     *
+     * @param Wine $wine
+     * @param WineDto $wineDto
+     * @return Wine Retorna o próprio objeto recebido para ações de aninhamento
+     */
     public function updateFromDto(Wine $wine, WineDto $wineDto): Wine
     {
         $wine->setName($wineDto->name);

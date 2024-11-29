@@ -12,7 +12,7 @@ readonly class WineDto
 
     public function __construct(
         #[Assert\NotBlank(message: 'O campo name é obrigatório')]
-        #[Assert\Length(min: 5, max: 255,  minMessage: 'Campo TÍTULO muito curto', maxMessage: 'Campo TÍTULO muito longo')]
+        #[Assert\Length(min: 5, max: 255,  minMessage: 'Campo name muito curto', maxMessage: 'Campo name muito longo')]
         public string $name,
 
         #[Assert\NotBlank(message: 'Informe o tipo de uva ou blend')]
@@ -35,9 +35,6 @@ readonly class WineDto
         
         #[Assert\Positive(message: 'O preço precisa ser positivo')]
         public float $price,
-        public ?int $id = null,
-        public ?\DateTimeImmutable $created_at = null,
-        public ?\DateTimeImmutable $updated_at = null,
     ) {
         $this->type = 'wine';
     }
