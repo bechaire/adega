@@ -64,14 +64,14 @@ final class WineService
         // se os dados vierem parciais, considero os valores que já existem no objeto da entidade
         // a tipagem forçada (cast) objetiva evitar erros por corpo recebido com valores como string
         $dto = new WineDto(
-            (string) $data['name']       ?? ($isPatch && $wine ? $wine->getName() : ''),
-            (string) $data['grape']      ?? ($isPatch && $wine ? $wine->getGrape() : ''),
-            (string) $data['country']    ?? ($isPatch && $wine ? $wine->getCountry() : ''),
-            (float) $data['alcoholperc'] ?? ($isPatch && $wine ? $wine->getAlcoholPerc() : 0),
-            (int) $data['volumeml']      ?? ($isPatch && $wine ? $wine->getVolumeMl() : 0),
-            (float) $data['weightkg']    ?? ($isPatch && $wine ? $wine->getWeightKg() : 0),
-            (int) $data['stock']         ?? ($isPatch && $wine ? $wine->getStock() : 0),
-            (float) $data['price']       ?? ($isPatch && $wine ? $wine->getPrice() : 0)
+            (string) ($data['name']       ?? ($isPatch && $wine ? $wine->getName() : '')),
+            (string) ($data['grape']      ?? ($isPatch && $wine ? $wine->getGrape() : '')),
+            (string) ($data['country']    ?? ($isPatch && $wine ? $wine->getCountry() : '')),
+            (float) ($data['alcoholperc'] ?? ($isPatch && $wine ? $wine->getAlcoholPerc() : 0)),
+            (int) ($data['volumeml']      ?? ($isPatch && $wine ? $wine->getVolumeMl() : 0)),
+            (float) ($data['weightkg']    ?? ($isPatch && $wine ? $wine->getWeightKg() : 0)),
+            (int) ($data['stock']         ?? ($isPatch && $wine ? $wine->getStock() : 0)),
+            (float) ($data['price']       ?? ($isPatch && $wine ? $wine->getPrice() : 0)),
         );
 
         $violations = $this->validator->validate($dto);
