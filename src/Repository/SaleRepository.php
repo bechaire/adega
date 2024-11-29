@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Sale;
+use App\Traits\PropertyQueryFilterTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -11,33 +14,28 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SaleRepository extends ServiceEntityRepository
 {
+    use PropertyQueryFilterTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Sale::class);
     }
 
-    //    /**
-    //     * @return Sale[] Returns an array of Sale objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function add(Sale $sale, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($sale);
 
-    //    public function findOneBySomeField($value): ?Sale
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Sale $sale, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($sale);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }

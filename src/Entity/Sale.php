@@ -57,7 +57,11 @@ class Sale
     public function __construct()
     {
         $this->items = new ArrayCollection();
-        $this->customer_id = Uuid::v4();
+        $this->customer_id = Uuid::v4()->toString();
+        $this->total_weight = 0;
+        $this->items_price = 0;
+        $this->shipping_price = 0;
+        $this->order_total = 0;
     }
 
     public function getId(): ?int
