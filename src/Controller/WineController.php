@@ -43,7 +43,7 @@ class WineController extends AbstractController
     {
         if (!$wine) {
             return $this->json([
-                'Error' => 'Não há produto com esse identificador'
+                'error' => 'Não há produto com esse identificador'
             ], 404);
         }
 
@@ -59,11 +59,12 @@ class WineController extends AbstractController
             $wine = $this->wineService->saveFromRequest($request);
         } catch (InvalidArgumentException $e) {
             return $this->json([
-                'Error' => $e->getMessage()
+                'error' => $e->getMessage()
             ], 400);
         } catch (ValidationFailedException $e) {
             return $this->json([
-                'Error' => (new ViolationsService($e))->toArray()
+                'error' => 'Erro de validação',
+                'details' => (new ViolationsService($e))->toArray(),
             ], 400);
         }
 
@@ -77,7 +78,7 @@ class WineController extends AbstractController
     {
         if (!$wine) {
             return $this->json([
-                'Error' => 'Não há produto com esse identificador'
+                'error' => 'Não há produto com esse identificador'
             ], 404);
         }
 
@@ -85,11 +86,12 @@ class WineController extends AbstractController
             $wine = $this->wineService->saveFromRequest($request, $wine);
         } catch (InvalidArgumentException $e) {
             return $this->json([
-                'Error' => $e->getMessage()
+                'error' => $e->getMessage()
             ], 400);
         } catch (ValidationFailedException $e) {
             return $this->json([
-                'Error' => (new ViolationsService($e))->toArray()
+                'error' => 'Erro de validação',
+                'details' => (new ViolationsService($e))->toArray(),
             ], 400);
         }
 
@@ -101,7 +103,7 @@ class WineController extends AbstractController
     {
         if (!$wine) {
             return $this->json([
-                'Error' => 'Não há produto com esse identificador'
+                'error' => 'Não há produto com esse identificador'
             ], 404);
         }
 

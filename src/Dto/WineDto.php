@@ -29,14 +29,13 @@ readonly class WineDto
 
         #[Assert\Positive(message: 'O peso precisa ser maior que zero')]
         public float $weightKg,
-        
+
         #[Assert\PositiveOrZero(message: 'A quantidade do estoque precisa ser maior ou igual a zero')]
         public int $stock,
-        
+
         #[Assert\Positive(message: 'O preço precisa ser positivo')]
         public float $price,
     ) {
         $this->type = 'wine';
     }
-
 }

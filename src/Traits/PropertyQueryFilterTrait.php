@@ -24,7 +24,10 @@ trait PropertyQueryFilterTrait
     {
         // pega as propriedades da classe atual
         $reflect = new \ReflectionClass($this->getEntityName());
-        $properties = [...$reflect->getProperties(), ...$reflect->getParentClass()->getProperties()];
+        $properties = $reflect->getProperties();
+        if ($reflect->getParentClass()) {
+            $properties = [...$properties, ...$reflect->getParentClass()->getProperties()];
+        }
 
         // pega os nomes das props que podem ser filtradas
         $propertyNames = array_flip(array_map(
