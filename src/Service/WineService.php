@@ -6,15 +6,16 @@ namespace App\Service;
 
 use App\Dto\WineDto;
 use App\Entity\Wine;
-use App\Exception\InvalidArgumentException;
 use App\Repository\WineRepository;
-use Symfony\Component\HttpFoundation\Exception\JsonException;
+use App\Traits\RequestDataTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class WineService
 {
+    use RequestDataTrait;
+
     public function __construct(
         private WineRepository $wineRepository,
         private ValidatorInterface $validator
@@ -30,20 +31,8 @@ final class WineService
      */
     public function saveFromRequest(Request $request, ?Wine $wine = null): Wine
     {
-        //aceitando json e html form submit
-        if (str_starts_with($request->headers->get('Content-Type'), 'application/json')) {
-            try {
-                $data = $request->toArray();
-            } catch (JsonException) {
-                throw new InvalidArgumentException('Revise a estrutura do JSON submetido');
-            }
-        } else {
-            $data = $request->request->all();
-        }
-
-        if (!$data) {
-            throw new InvalidArgumentException('Não foi possível coletar os dados enviados, revise as informações');
-        }
+        /** RequestDataTrait */
+        $data = $this->getRequestData($request);
 
         $isPatch = $request->getMethod() == 'PATCH';
         $dto = $this->createDto($data, $wine, $isPatch);
@@ -73,15 +62,16 @@ final class WineService
         $data = array_change_key_case($data, CASE_LOWER);
 
         // se os dados vierem parciais, considero os valores que já existem no objeto da entidade
+        // a tipagem forçada (cast) objetiva evitar erros por corpo recebido com valores como string
         $dto = new WineDto(
-            $data['name']        ?? ($isPatch && $wine ? $wine->getName() : ''),
-            $data['grape']       ?? ($isPatch && $wine ? $wine->getGrape() : ''),
-            $data['country']     ?? ($isPatch && $wine ? $wine->getCountry() : ''),
-            $data['alcoholperc'] ?? ($isPatch && $wine ? $wine->getAlcoholPerc() : 0),
-            $data['volumeml']    ?? ($isPatch && $wine ? $wine->getVolumeMl() : 0),
-            $data['weightkg']    ?? ($isPatch && $wine ? $wine->getWeightKg() : 0),
-            $data['stock']       ?? ($isPatch && $wine ? $wine->getStock() : 0),
-            $data['price']       ?? ($isPatch && $wine ? $wine->getPrice() : 0)
+            (string) $data['name']       ?? ($isPatch && $wine ? $wine->getName() : ''),
+            (string) $data['grape']      ?? ($isPatch && $wine ? $wine->getGrape() : ''),
+            (string) $data['country']    ?? ($isPatch && $wine ? $wine->getCountry() : ''),
+            (float) $data['alcoholperc'] ?? ($isPatch && $wine ? $wine->getAlcoholPerc() : 0),
+            (int) $data['volumeml']      ?? ($isPatch && $wine ? $wine->getVolumeMl() : 0),
+            (float) $data['weightkg']    ?? ($isPatch && $wine ? $wine->getWeightKg() : 0),
+            (int) $data['stock']         ?? ($isPatch && $wine ? $wine->getStock() : 0),
+            (float) $data['price']       ?? ($isPatch && $wine ? $wine->getPrice() : 0)
         );
 
         $violations = $this->validator->validate($dto);
