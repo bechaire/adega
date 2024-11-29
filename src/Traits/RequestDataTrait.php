@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 trait RequestDataTrait
 {
     /**
-     * O objetivo deste método é coletar as informações do request quando um POST é realizado, buscando ou 
-     * dos dados do "FormData" ou do corpo, recebido como JSON
+     * O objetivo deste método é coletar as informações do request quando um POST é realizado, buscando 
+     * dados do "FormData/HTML" ou no corpo da requisição, em formato JSON
      *
      * @param Request $request
      * @return array Dados compilados de acordo como feita a entrada

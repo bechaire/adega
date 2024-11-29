@@ -29,12 +29,12 @@ class SaleController extends AbstractController
         $validQueryFilters = $this->saleRepository->getFilters($request->query->all());
         if ($validQueryFilters) {
             return $this->json([
-                'sales' => $this->saleRepository->findBy($validQueryFilters)
+                'sales' => $this->saleRepository->findSalesOnly($validQueryFilters)
             ]);
         }
 
         return $this->json([
-            'sales' => $this->saleRepository->findAll()
+            'sales' => $this->saleRepository->findSalesOnly()
         ]);
     }
 

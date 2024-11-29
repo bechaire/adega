@@ -21,6 +21,31 @@ class SaleRepository extends ServiceEntityRepository
         parent::__construct($registry, Sale::class);
     }
 
+    /**
+     * Faz a busca dos dados da venda apenas, sem os itens (N+1)
+     *
+     * @param array $filter
+     * @return Sale
+     */
+    public function findSalesOnly(array $filter=[]): array
+    {
+        $buider = $this->getEntityManager()->createQueryBuilder();
+        
+        $buider->select('sale')
+               ->from(Sale::class, 'sale')
+               ->orderBy('sale.id', 'DESC');
+
+        foreach($filter as $field => $value) {
+            if (is_null($value)) {
+                continue;
+            }
+            $buider->andWhere("sale.{$field} = :{$field}")
+                    ->setParameter($field, $value);
+        }
+
+        return $buider->getQuery()->getArrayResult();
+    }
+
     public function add(Sale $sale, bool $flush = false): void
     {
         $this->getEntityManager()->persist($sale);

@@ -1,0 +1,316 @@
+{
+	"info": {
+		"_postman_id": "194d2cad-3108-467c-b8de-79c104a44d2e",
+		"name": "API Adega SE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "40056080"
+	},
+	"item": [
+		{
+			"name": "/wines",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://127.0.0.1:8000/api/v1/wines"
+			},
+			"response": []
+		},
+		{
+			"name": "/wines (com filtros)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://127.0.0.1:8000/api/v1/wines?grape=Merlot&country=Brazil&stock=8",
+					"protocol": "https",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"wines"
+					],
+					"query": [
+						{
+							"key": "grape",
+							"value": "Merlot"
+						},
+						{
+							"key": "country",
+							"value": "Brazil"
+						},
+						{
+							"key": "stock",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/wines/{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://127.0.0.1:8000/api/v1/wines/101"
+			},
+			"response": []
+		},
+		{
+			"name": "/wines",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Italy\",\r\n    \"alcoholPerc\": 12.7,\r\n    \"name\": \"Wine 10 (Merlot)\",\r\n    \"volumeMl\": 500,\r\n    \"weightKg\": 2,\r\n    \"stock\": 2,\r\n    \"price\": 215.8,\r\n    \"createdAt\": \"2024-11-27T19:22:22+00:00\",\r\n    \"updatedAt\": \"2024-11-27T19:22:22+00:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/wines"
+			},
+			"response": []
+		},
+		{
+			"name": "/wines/{id}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Italy\",\r\n    \"alcoholPerc\": 12.7,\r\n    \"name\": \"Wine 10 (Merlot)\",\r\n    \"volumeMl\": 500,\r\n    \"weightKg\": 2,\r\n    \"stock\": 7,\r\n    \"price\": 215.8,\r\n    \"createdAt\": \"2024-11-27T19:22:22+00:00\",\r\n    \"updatedAt\": \"2024-11-27T19:22:22+00:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/wines/98"
+			},
+			"response": []
+		},
+		{
+			"name": "/wines/{id",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Brazil\",\r\n    \"createdAt\": \"2024-11-27T19:22:22+00:00\",\r\n    \"updatedAt\": \"2024-11-27T19:22:22+00:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/wines/100"
+			},
+			"response": []
+		},
+		{
+			"name": "/wines/{id} (FormHtml)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "country",
+							"value": "Brazil",
+							"type": "text"
+						}
+					]
+				},
+				"url": "https://127.0.0.1:8000/api/v1/wines/108"
+			},
+			"response": []
+		},
+		{
+			"name": "/wines",
+			"protocolProfileBehavior": {
+				"followOriginalHttpMethod": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Italy\",\r\n    \"alcoholPerc\": 12.7,\r\n    \"id\": 50,\r\n    \"name\": \"Wine 10 (Merlot)\",\r\n    \"volume_Ml\": 500,\r\n    \"weightKg\": 2,\r\n    \"stock\": 7,\r\n    \"price\": 215.8,\r\n    \"createdAt\": \"2024-11-27T19:22:22+00:00\",\r\n    \"updatedAt\": \"2024-11-27T19:22:22+00:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/wines/109"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales (com filtros)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://127.0.0.1:8000/api/v1/sales?customirId=04cdc6af-ef1f-4ac7-82df-6e43bf0a6edd",
+					"protocol": "https",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"sales"
+					],
+					"query": [
+						{
+							"key": "customirId",
+							"value": "04cdc6af-ef1f-4ac7-82df-6e43bf0a6edd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/3"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 10,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/1"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/1"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/2"
+			},
+			"response": []
+		}
+	]
+}
