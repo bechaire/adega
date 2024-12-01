@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Drink;
 use App\Entity\Wine;
 use App\Traits\PropertyQueryFilterTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -40,5 +41,24 @@ class WineRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function validateIds(array $ids): bool
+    {
+        $buider = $this->getEntityManager()->createQueryBuilder();
+
+        $ids = array_unique($ids);
+
+        $ids = array_map(fn($id) => (int) $id, $ids);
+
+        $inIds = implode(',', $ids);
+
+        $buider->select('drink')
+               ->from(Drink::class, 'drink')
+               ->where("drink.id in ({$inIds})");
+
+        $queryResult = $buider->getQuery()->getArrayResult();
+
+        return count($queryResult) == count($ids);
     }
 }

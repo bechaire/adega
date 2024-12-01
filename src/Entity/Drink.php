@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -86,9 +87,32 @@ abstract class Drink
         return $this->stock;
     }
 
-    public function setStock(int $stock): static
+    public function changeStock(int $stock): static
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function increaseStock(int $stock): static
+    {
+        $this->stock += $stock;
+
+        return $this;
+    }
+
+    public function decreaseStock(int $stock): static
+    {
+        $currentStock = $this->stock;
+
+        $this->stock -= $stock;
+
+        if ($this->stock < 0) {
+            $this->stock = $currentStock;
+            throw new InvalidArgumentException(
+                sprintf('Quantidade superior ao estoque atual do item %s (%s)', $this->getId(), $this->getName())
+            );
+        }
 
         return $this;
     }
