@@ -32,7 +32,7 @@ class SaleItemController extends AbstractController
     public function getSaleItems(Sale $sale): JsonResponse
     {
         return $this->json(
-            $this->serializer->normalize($sale->getItems(), 'json', ['groups' => ['sale_info']])
+            $this->saleItemRepository->fullSaleItemsData($sale->getId())
         );
     }
     
@@ -58,7 +58,34 @@ class SaleItemController extends AbstractController
         }
 
         return $this->json(
-            $this->serializer->normalize($sale, 'json', ['groups' => ['sale_info']]),
+            $this->saleItemRepository->fullSaleItemsData($sale->getId()),
+            201
+        );
+    }
+
+    #[Route('/sales/{sale}/items/{saleItem}', name: 'app_saleitem_update', methods: ['PUT'])]
+    public function updateSaleItem(?Sale $sale, ?SaleItem $saleItem, Request $request): JsonResponse
+    {
+        if (!$saleItem || !$sale || $sale->getId() != $saleItem->getSale()->getId()) {
+            return $this->json([
+                'error' => 'Não há venda com esse identificador'
+            ], 404);
+        }
+
+        try {
+            $this->saleItemService->updateFromRequest($request, $sale, $saleItem);
+        } catch (InvalidArgumentException $e) {
+            return $this->json([
+                'error' => $e->getMessage()
+            ], 400);
+        } catch (ValidationFailedException $e) {
+            return $this->json([
+                'error' => (new ViolationsService($e))->toArray()
+            ], 400);
+        }
+
+        return $this->json(
+            $this->saleItemRepository->fullSaleItemsData($sale->getId()),
             201
         );
     }

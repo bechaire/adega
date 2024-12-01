@@ -28,6 +28,7 @@ class SaleController extends AbstractController
     #[Route('/sales', name: 'app_sale_list', methods: ['GET'])]
     public function listSales(Request $request): JsonResponse
     {
+        // Opcionalmente a query pode ter filtros que podem ser aplicados
         $validQueryFilters = $this->saleRepository->getFilters($request->query->all());
         if ($validQueryFilters) {
             return $this->json([
@@ -87,7 +88,7 @@ class SaleController extends AbstractController
         }
 
         try {
-            $sale = $this->saleService->saveFromRequest($request, $sale);
+            $this->saleService->saveFromRequest($request, $sale);
         } catch (InvalidArgumentException $e) {
             return $this->json([
                 'error' => $e->getMessage()

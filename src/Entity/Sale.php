@@ -191,17 +191,6 @@ class Sale
         return $this->shipping_price;
     }
 
-    public function updateShippingPrice(): static
-    {
-        $this->shipping_price = ceil($this->getTotalWeight()) * 5;
-        
-        if ($this->getDistance() > 100) {
-            $this->shipping_price = $this->shipping_price * $this->getDistance() / 100;
-        }
-        
-        return $this;
-    }
-
     public function getOrderTotal(): ?float
     {
         return $this->order_total;
@@ -210,20 +199,15 @@ class Sale
     public function updateOrderTotal(?SaleItem $item=null, string $action=''): static
     {
         if ($item && $action) {
-            if ($action == 'inserted') {
-                $this->increaseItemsTotal($item->getPrice() * $item->getQuantity());
-                $this->increaseTotalWeight($item->getWeightKg() * $item->getQuantity());
-                $item->getDrink()->decreaseStock($item->getQuantity());
-            } else {
-                $this->decreaseItemsTotal($item->getPrice() * $item->getQuantity());
-                $this->decreaseTotalWeight($item->getWeightKg() * $item->getQuantity());
-                $item->getDrink()->increaseStock($item->getQuantity());
+            switch($action) {
+                case 'inserted':
+                    $item->getDrink()->decreaseStock($item->getQuantity());
+                    break;
+                case 'removed':
+                    $item->getDrink()->increaseStock($item->getQuantity());
+                    break;
             }
         }
-
-        $this->updateShippingPrice();
-
-        $this->order_total = $this->getShippingPrice() + $this->getItemsPrice();
 
         return $this;
     }

@@ -8,6 +8,7 @@ use App\Dto\SaleDto;
 use App\Entity\Sale;
 use App\Repository\SaleRepository;
 use App\Traits\RequestDataTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -18,7 +19,8 @@ final class SaleService
 
     public function __construct(
         private SaleRepository $saleRepository,
-        private ValidatorInterface $validator
+        private ValidatorInterface $validator,
+        private EntityManagerInterface $em,
     ) {}
 
     /**
@@ -35,6 +37,7 @@ final class SaleService
         $data = $this->getRequestData($request);
 
         $isPatch = $request->getMethod() == 'PATCH';
+        
         $dto = $this->createDto($data, $sale, $isPatch);
 
         if (!$sale) {
@@ -45,7 +48,9 @@ final class SaleService
 
         $this->saleRepository->add($sale, true);
 
-        return $sale;
+        $this->calculateTotals($sale);
+
+        return $this->saleRepository->find($sale);
     }
 
     /**
@@ -90,4 +95,74 @@ final class SaleService
         return $sale;
     }
 
+    /**
+     * Calcular o somatório total da compra, baseado no preço dos itens e peso, bem como distância
+     * para o caso do campo de frete, onde a lógica considera também o peso total
+     *
+     * @param Sale $sale
+     * @return void
+     */
+    public function calculateTotals(Sale $sale): void
+    {
+        # OBS: sem sucesso, tentei criar subselects, acredito que tenha uma forma melhor, mas talvez só com sql (o que está fora do escopo)
+        $dqlWeight = <<< DQL
+            SELECT COALESCE(SUM(item.weight_kg * item.quantity), 0) 
+            FROM App\Entity\SaleItem item 
+            WHERE item.sale = :sale
+        DQL;
+        $totalWeight = (float) $this->em->createQuery($dqlWeight)
+                        ->setParameter('sale', $sale)
+                        ->getSingleScalarResult();
+
+        $dqlPrice = <<< DQL
+            SELECT COALESCE(SUM(item.price * item.quantity), 0) 
+            FROM App\Entity\SaleItem item 
+            WHERE item.sale = :sale
+        DQL;
+        $itemsPrice = (float) $this->em
+                        ->createQuery($dqlPrice)
+                        ->setParameter('sale', $sale)
+                        ->getSingleScalarResult();
+
+        /** @var float */
+        $shippingPrice = $this->getShippingPrice($totalWeight, $sale);
+
+        $dqlSaleTotals = <<<DQL
+            UPDATE App\Entity\Sale sale
+            SET sale.total_weight = :total_weight,
+                sale.items_price = :items_price,
+                sale.shipping_price = :shipping_price,
+                sale.order_total = :order_total
+            WHERE sale.id = :sale
+        DQL;
+        $this->em
+             ->createQuery($dqlSaleTotals)
+             ->setParameters([
+                'total_weight' => $totalWeight,
+                'items_price' => $itemsPrice,
+                'shipping_price' => $shippingPrice,
+                'order_total' => $itemsPrice + $shippingPrice,
+                'sale' => $sale
+            ])->execute();
+
+        $this->em->refresh($sale);
+    }
+
+    /**
+     * Cálculo do frete
+     *
+     * @param float $totalWeight
+     * @param Sale $sale
+     * @return void
+     */
+    private function getShippingPrice(float $totalWeight, Sale $sale): float
+    {
+        $shippingPrice = $totalWeight * 5;
+        if ($sale->getDistance() > 100) {
+            $shippingPrice *= $sale->getDistance() / 100;
+        }
+        
+        return $shippingPrice;
+    }
 }
+

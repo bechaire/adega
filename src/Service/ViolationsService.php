@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 class ViolationsService

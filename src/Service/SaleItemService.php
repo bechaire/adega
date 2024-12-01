@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Dto\SaleItemDto;
-use App\Entity\Drink;
 use App\Entity\Sale;
 use App\Entity\SaleItem;
 use App\Exception\InvalidArgumentException;
@@ -26,9 +25,17 @@ final class SaleItemService
         private WineRepository $wineRepository,
         private ValidatorInterface $validator,
         private EntityManagerInterface $em,
+        private SaleService $saleService,
     ) {}
 
 
+    /**
+     * Cria, a partir de um Request a estrutura de coleta de dados e validações para o registro do item comprado
+     *
+     * @param Request $request
+     * @param Sale $sale
+     * @return void
+     */
     public function createFromRequest(Request $request, Sale $sale): void
     {
         /** RequestDataTrait */
@@ -47,6 +54,7 @@ final class SaleItemService
 
         foreach ($data['items'] as $saleItemData) {
             $dto = $this->createDto($saleItemData);
+
             $drink = $this->wineRepository->find($saleItemData['drinkId']);
             
             $saleItem = new SaleItem();
@@ -61,6 +69,27 @@ final class SaleItemService
         }
 
         $this->em->flush();
+        $this->saleService->calculateTotals($sale);
+    }
+
+    public function updateFromRequest(Request $request, Sale $sale, SaleItem $saleItem): void
+    {
+        /** RequestDataTrait */
+        $data = $this->getRequestData($request);
+
+        $dto = $this->createDto($data);
+        
+        $diferencaQuantidade = $dto->quantity - $saleItem->getQuantity();
+        if ($diferencaQuantidade) {
+            $newQuantity = ($diferencaQuantidade > 0) ? $diferencaQuantidade : abs($diferencaQuantidade);
+            $action = ($diferencaQuantidade>0) ? 'inserted' : 'removed';
+            $saleItem->setQuantity($newQuantity);
+            $sale->updateOrderTotal($saleItem, $action);
+            $saleItem->setQuantity($dto->quantity);
+            $this->em->flush();
+            $this->saleService->calculateTotals($sale);
+        }
+
     }
 
     /**

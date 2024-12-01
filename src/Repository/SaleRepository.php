@@ -49,7 +49,6 @@ class SaleRepository extends ServiceEntityRepository
 
     public function add(Sale $sale, bool $flush = false): void
     {
-        $sale->updateOrderTotal();
         $this->getEntityManager()->persist($sale);
 
         if ($flush) {
@@ -86,7 +85,7 @@ class SaleRepository extends ServiceEntityRepository
         DQL;
 
         $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('sale_id', $saleData['id']);
+        $query->setParameter('sale_id', $saleData['id'] ?? 0);
 
         $saleData['items'] = $query->getArrayResult();
         

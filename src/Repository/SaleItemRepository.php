@@ -47,15 +47,33 @@ class SaleItemRepository extends ServiceEntityRepository
                    item.created_at, item.updated_at
             FROM App\Entity\SaleItem item
             LEFT JOIN item.drink drink
-            WHERE item.sale = :sale
-            AND item.id = :saleitem
+            WHERE item.sale = :sale_id
+            AND item.id = :saleitem_id
             ORDER BY item.id 
         DQL;
 
         $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('sale', $saleId);
-        $query->setParameter('saleitem', $saleItemId);
+        $query->setParameter('sale_id', $saleId);
+        $query->setParameter('saleitem_id', $saleItemId);
         
         return $query->getSingleResult();
+    }
+
+    public function fullSaleItemsData(int $saleId): array
+    {
+        $dql = <<<DQL
+            SELECT item.id, item.price, item.quantity, 
+                   drink.id as drink_id, drink.name, drink.volume_ml as volume, drink.weight_kg as weight,
+                   item.created_at, item.updated_at
+            FROM App\Entity\SaleItem item
+            LEFT JOIN item.drink drink
+            WHERE item.sale = :sale_id
+            ORDER BY item.id 
+        DQL;
+
+        $query = $this->getEntityManager()->createQuery($dql);
+        $query->setParameter('sale_id', $saleId);
+        
+        return $query->getArrayResult();
     }
 }
