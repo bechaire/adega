@@ -16,8 +16,9 @@ class SaleRepository extends ServiceEntityRepository
 {
     use PropertyQueryFilterTrait;
 
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry
+    ) {
         parent::__construct($registry, Sale::class);
     }
 
@@ -27,7 +28,7 @@ class SaleRepository extends ServiceEntityRepository
      * @param array $filter
      * @return Sale
      */
-    public function findSalesOnly(array $filter=[]): array
+    public function findSalesWithoutItems(array $filter=[]): array
     {
         $buider = $this->getEntityManager()->createQueryBuilder();
         
@@ -48,6 +49,7 @@ class SaleRepository extends ServiceEntityRepository
 
     public function add(Sale $sale, bool $flush = false): void
     {
+        $sale->updateOrderTotal();
         $this->getEntityManager()->persist($sale);
 
         if ($flush) {
@@ -62,5 +64,32 @@ class SaleRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * Hidrata um array associativo com os dados de uma venda, adicionando a coluna 'items'
+     * com as informações principais dos itens comprados
+     *
+     * @param array $saleData
+     * @return array
+     */
+    public function hydrateWithSaleItems(array $saleData): array
+    {
+        $dql = <<<DQL
+            SELECT item.id, item.price, item.quantity, 
+                   drink.id as drink_id, drink.name, drink.volume_ml as volume, drink.weight_kg as weight,
+                   item.created_at, item.updated_at
+            FROM App\Entity\SaleItem item
+            LEFT JOIN item.drink drink
+            WHERE item.sale = :sale_id
+            ORDER BY item.id 
+        DQL;
+
+        $query = $this->getEntityManager()->createQuery($dql);
+        $query->setParameter('sale_id', $saleData['id']);
+
+        $saleData['items'] = $query->getArrayResult();
+        
+        return $saleData;
     }
 }

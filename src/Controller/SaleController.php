@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 class SaleController extends AbstractController
@@ -21,6 +22,7 @@ class SaleController extends AbstractController
     public function __construct(
         private SaleRepository $saleRepository,
         private SaleService $saleService,
+        private NormalizerInterface $serializer,
     ) {}
 
     #[Route('/sales', name: 'app_sale_list', methods: ['GET'])]
@@ -29,26 +31,29 @@ class SaleController extends AbstractController
         $validQueryFilters = $this->saleRepository->getFilters($request->query->all());
         if ($validQueryFilters) {
             return $this->json([
-                'sales' => $this->saleRepository->findSalesOnly($validQueryFilters)
+                'sales' => $this->saleRepository->findSalesWithoutItems($validQueryFilters)
             ]);
         }
 
         return $this->json([
-            'sales' => $this->saleRepository->findSalesOnly()
+            'sales' => $this->saleRepository->findSalesWithoutItems()
         ]);
     }
 
-    #[Route('/sales/{sale}', name: 'app_sale_get', methods: ['GET'])]
-    public function getSale(?Sale $sale): JsonResponse
+    #[Route('/sales/{saleId}', name: 'app_sale_get', methods: ['GET'])]
+    public function getSale(int $saleId): JsonResponse
     {
-        if (!$sale) {
+        /** @var array */
+        $saleFound = $this->saleRepository->findSalesWithoutItems(['id' => $saleId]);
+
+        if (!$saleFound) {
             return $this->json([
-                'error' => 'Não há produto com esse identificador'
+                'error' => 'Não há uma venda com esse identificador'
             ], 404);
         }
 
         return $this->json(
-            $this->saleRepository->find($sale)
+            $this->saleRepository->hydrateWithSaleItems($saleFound[0])
         );
     }
 
@@ -77,7 +82,7 @@ class SaleController extends AbstractController
     {
         if (!$sale) {
             return $this->json([
-                'error' => 'Não há produto com esse identificador'
+                'error' => 'Não há venda com esse identificador'
             ], 404);
         }
 
@@ -93,7 +98,10 @@ class SaleController extends AbstractController
             ], 400);
         }
 
-        return $this->json($sale, 200);
+        return $this->json(
+            $this->serializer->normalize($sale, 'json', ['groups' => ['sale_info']]),
+            200
+        );
     }
 
     #[Route('/sales/{sale}', name: 'app_sale_remove', methods: ['DELETE'])]
@@ -101,7 +109,7 @@ class SaleController extends AbstractController
     {
         if (!$sale) {
             return $this->json([
-                'error' => 'Não há produto com esse identificador'
+                'error' => 'Não há venda com esse identificador'
             ], 404);
         }
 
@@ -109,4 +117,6 @@ class SaleController extends AbstractController
 
         return new Response(status: 204);
     }
+
+
 }

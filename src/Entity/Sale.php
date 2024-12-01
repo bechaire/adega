@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SaleRepository::class)]
@@ -19,40 +20,51 @@ class Sale
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['sale_info'])]
     private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['sale_info'])]
+    private ?string $customer_id = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['sale_info'])]
+    private ?\DateTimeInterface $date = null;
+
+    #[ORM\Column]
+    #[Groups(['sale_info'])]
+    private ?int $distance = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
+    #[Groups(['sale_info'])]
+    private ?float $total_weight = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[Groups(['sale_info'])]
+    private ?float $items_price = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[Groups(['sale_info'])]
+    private ?float $shipping_price = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[Groups(['sale_info'])]
+    private ?float $order_total = null;
+
+    #[ORM\Column]
+    #[Groups(['sale_info'])]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column]
+    #[Groups(['sale_info'])]
+    private ?\DateTimeImmutable $updated_at = null;
 
     /**
      * @var Collection<int, SaleItem>
      */
-    #[ORM\OneToMany(targetEntity: SaleItem::class, mappedBy: 'Sale', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: SaleItem::class, mappedBy: 'sale', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups(['sale_info'])]
     private Collection $items;
-
-    #[ORM\Column(length: 255)]
-    private ?string $customer_id = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
-
-    #[ORM\Column]
-    private ?int $distance = null;
-
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
-    private ?float $total_weight = null;
-
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private ?float $items_price = null;
-
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private ?float $shipping_price = null;
-
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private ?float $order_total = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updated_at = null;
 
     public function __construct()
     {
@@ -81,6 +93,7 @@ class Sale
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
+            $this->updateOrderTotal($item, 'inserted');
             $item->setSale($this);
         }
 
@@ -90,7 +103,7 @@ class Sale
     public function removeItem(SaleItem $item): static
     {
         if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
+            $this->updateOrderTotal($item, 'removed');
             if ($item->getSale() === $this) {
                 $item->setSale(null);
             }
@@ -140,9 +153,16 @@ class Sale
         return $this->total_weight;
     }
 
-    public function setTotalWeight(?float $total_weight): static
+    public function increaseTotalWeight(float $weight): static
     {
-        $this->total_weight = $total_weight;
+        $this->total_weight += $weight;
+
+        return $this;
+    }
+
+    public function decreaseTotalWeight(float $weight): static
+    {
+        $this->total_weight -= $weight;
 
         return $this;
     }
@@ -152,9 +172,16 @@ class Sale
         return $this->items_price;
     }
 
-    public function setItemsPrice(?float $items_price): static
+    public function increaseItemsTotal(float $item_price): static
     {
-        $this->items_price = $items_price;
+        $this->items_price += $item_price;
+
+        return $this;
+    }
+
+    public function decreaseItemsTotal(float $item_price): static
+    {
+        $this->items_price -= $item_price;
 
         return $this;
     }
@@ -164,10 +191,14 @@ class Sale
         return $this->shipping_price;
     }
 
-    public function setShippingPrice(?float $shipping_price): static
+    public function updateShippingPrice(): static
     {
-        $this->shipping_price = $shipping_price;
-
+        $this->shipping_price = ceil($this->getTotalWeight()) * 5;
+        
+        if ($this->getDistance() > 100) {
+            $this->shipping_price = $this->shipping_price * $this->getDistance() / 100;
+        }
+        
         return $this;
     }
 
@@ -176,9 +207,23 @@ class Sale
         return $this->order_total;
     }
 
-    public function setOrderTotal(?float $order_total): static
+    public function updateOrderTotal(?SaleItem $item=null, string $action=''): static
     {
-        $this->order_total = $order_total;
+        if ($item && $action) {
+            if ($action == 'inserted') {
+                $this->increaseItemsTotal($item->getPrice() * $item->getQuantity());
+                $this->increaseTotalWeight($item->getWeightKg() * $item->getQuantity());
+                $item->getDrink()->decreaseStock($item->getQuantity());
+            } else {
+                $this->decreaseItemsTotal($item->getPrice() * $item->getQuantity());
+                $this->decreaseTotalWeight($item->getWeightKg() * $item->getQuantity());
+                $item->getDrink()->increaseStock($item->getQuantity());
+            }
+        }
+
+        $this->updateShippingPrice();
+
+        $this->order_total = $this->getShippingPrice() + $this->getItemsPrice();
 
         return $this;
     }
