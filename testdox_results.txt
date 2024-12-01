@@ -1,3 +1,18 @@
+Sale Dto (App\Tests\Dto\SaleDto)
+ [x] Valid sale dto
+ [x] Invalid distance
+ [x] Zero distance
+ [x] Invalid date
+ [x] Blank date
+
+Sale Item Dto (App\Tests\Dto\SaleItemDto)
+ [x] Valid sale item dto
+ [x] Invalid quantity
+
+Wine Dto (App\Tests\Dto\WineDto)
+ [x] Valid wine dto
+ [x] Extreme invalid wine dto
+
 Sale Item (App\Tests\Entity\SaleItem)
  [x] Sale item entity
  [x] Type of data fields
@@ -12,7 +27,7 @@ Wine (App\Tests\Entity\Wine)
  [x] Type of data fields
  [x] Nullable fields
 
-Property Query Filter Trait Test Php (App\Tests\Trait\PropertyQueryFilterTraitTestPhp)
+Property Query Filter Trait (App\Tests\Trait\PropertyQueryFilterTrait)
  [x] Something
 
 Request Data Trait (App\Tests\Trait\RequestDataTrait)
