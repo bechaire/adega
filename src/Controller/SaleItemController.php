@@ -7,6 +7,7 @@ use App\Entity\SaleItem;
 use App\Exception\InvalidArgumentException;
 use App\Repository\SaleItemRepository;
 use App\Service\SaleItemService;
+use App\Service\SaleService;
 use App\Service\ViolationsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
@@ -24,6 +25,7 @@ class SaleItemController extends AbstractController
         private NormalizerInterface $serializer,
         private SaleItemRepository $saleItemRepository,
         private SaleItemService $saleItemService,
+        private SaleService $saleService,
         private EntityManagerInterface $em,
     ) {
     }
@@ -119,6 +121,7 @@ class SaleItemController extends AbstractController
 
         $sale->removeItem($saleItem);
         $this->em->flush();
+        $this->saleService->calculateTotals($sale);
 
         return new Response(status: 204);
     }
