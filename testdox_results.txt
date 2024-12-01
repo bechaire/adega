@@ -1,0 +1,14 @@
+Sale Item (App\Tests\Entity\SaleItem)
+ [x] Sale item entity
+ [x] Type of data fields
+
+Sale (App\Tests\Entity\Sale)
+ [x] Sale entity
+ [x] Type of data fields
+
+Wine (App\Tests\Entity\Wine)
+ [x] Wine entity
+ [x] Decrease stock exception
+ [x] Type of data fields
+ [x] Nullable fields
+
