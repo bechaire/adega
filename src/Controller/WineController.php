@@ -9,6 +9,7 @@ use App\Exception\InvalidArgumentException;
 use App\Repository\WineRepository;
 use App\Service\ViolationsService;
 use App\Service\WineService;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,9 +48,7 @@ class WineController extends AbstractController
             ], 404);
         }
 
-        return $this->json(
-            $this->wineRepository->find($wine)
-        );
+        return $this->json($wine);
     }
 
     #[Route('/wines', name: 'app_wine_create', methods: ['POST'])]
@@ -107,7 +106,13 @@ class WineController extends AbstractController
             ], 404);
         }
 
-        $wine = $this->wineRepository->remove($wine, true);
+        try {
+            $wine = $this->wineRepository->remove($wine, true);
+        } catch (ForeignKeyConstraintViolationException $e) {
+            return $this->json([
+                'error' => 'Este item não pode ser removido pois há dados de venda relacionado'
+            ], 404);
+        }
 
         return new Response(status: 204);
     }

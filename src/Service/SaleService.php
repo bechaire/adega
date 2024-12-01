@@ -17,7 +17,7 @@ final class SaleService
     use RequestDataTrait;
 
     public function __construct(
-        private SaleRepository $SaleRepository,
+        private SaleRepository $saleRepository,
         private ValidatorInterface $validator
     ) {}
 
@@ -43,7 +43,7 @@ final class SaleService
 
         $this->updateFromDto($sale, $dto);
 
-        $this->SaleRepository->add($sale, true);
+        $this->saleRepository->add($sale, true);
 
         return $sale;
     }
@@ -89,4 +89,5 @@ final class SaleService
         $sale->setDate(new \DateTime($saleDto->date));
         return $sale;
     }
+
 }

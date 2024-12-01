@@ -76,7 +76,7 @@ final class WineService
 
         $violations = $this->validator->validate($dto);
         if (count($violations)) {
-            throw new ValidationFailedException('Erros', $violations);
+            throw new ValidationFailedException('erros', $violations);
         }
 
         return $dto;
@@ -97,7 +97,7 @@ final class WineService
         $wine->setAlcoholPerc($wineDto->alcoholPerc);
         $wine->setVolumeMl($wineDto->volumeMl);
         $wine->setWeightKg($wineDto->weightKg);
-        $wine->setStock($wineDto->stock);
+        $wine->changeStock($wineDto->stock);
         $wine->setPrice($wineDto->price);
         return $wine;
     }
