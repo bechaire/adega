@@ -21,7 +21,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://127.0.0.1:8000/api/v1/wines?grape=Merlot&country=Brazil&stock=8",
+					"raw": "https://127.0.0.1:8000/api/v1/wines?grape=Chardonnay&country=Chile",
 					"protocol": "https",
 					"host": [
 						"127",
@@ -38,15 +38,11 @@
 					"query": [
 						{
 							"key": "grape",
-							"value": "Merlot"
+							"value": "Chardonnay"
 						},
 						{
 							"key": "country",
-							"value": "Brazil"
-						},
-						{
-							"key": "stock",
-							"value": "8"
+							"value": "Chile"
 						}
 					]
 				}
@@ -58,7 +54,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "https://127.0.0.1:8000/api/v1/wines/101"
+				"url": "https://127.0.0.1:8000/api/v1/wines/138"
 			},
 			"response": []
 		},
@@ -69,7 +65,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Italy\",\r\n    \"alcoholPerc\": 12.7,\r\n    \"name\": \"Wine 10 (Merlot)\",\r\n    \"volumeMl\": 500,\r\n    \"weightKg\": 2,\r\n    \"stock\": 2,\r\n    \"price\": 215.8,\r\n    \"createdAt\": \"2024-11-27T19:22:22+00:00\",\r\n    \"updatedAt\": \"2024-11-27T19:22:22+00:00\"\r\n}",
+					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Italy\",\r\n    \"alcoholPerc\": 12.7,\r\n    \"name\": \"Wine 10 (Merlot)\",\r\n    \"volumeMl\": 600,\r\n    \"weightKg\": 2,\r\n    \"stock\": 2,\r\n    \"price\": 215.8\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -87,32 +83,32 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Italy\",\r\n    \"alcoholPerc\": 12.7,\r\n    \"name\": \"Wine 10 (Merlot)\",\r\n    \"volumeMl\": 500,\r\n    \"weightKg\": 2,\r\n    \"stock\": 7,\r\n    \"price\": 215.8,\r\n    \"createdAt\": \"2024-11-27T19:22:22+00:00\",\r\n    \"updatedAt\": \"2024-11-27T19:22:22+00:00\"\r\n}",
+					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Italy\",\r\n    \"alcoholPerc\": 12.7,\r\n    \"name\": \"Wine 1X (Merlot)\",\r\n    \"volumeMl\": 500,\r\n    \"weightKg\": 2,\r\n    \"stock\": 7,\r\n    \"price\": 215.8\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "https://127.0.0.1:8000/api/v1/wines/98"
+				"url": "https://127.0.0.1:8000/api/v1/wines/138"
 			},
 			"response": []
 		},
 		{
-			"name": "/wines/{id",
+			"name": "/wines/{id}",
 			"request": {
 				"method": "PATCH",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Brazil\",\r\n    \"createdAt\": \"2024-11-27T19:22:22+00:00\",\r\n    \"updatedAt\": \"2024-11-27T19:22:22+00:00\"\r\n}",
+					"raw": "{\r\n    \"grape\": \"Merlot\",\r\n    \"country\": \"Brazil\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "https://127.0.0.1:8000/api/v1/wines/100"
+				"url": "https://127.0.0.1:8000/api/v1/wines/139"
 			},
 			"response": []
 		},
@@ -131,7 +127,7 @@
 						}
 					]
 				},
-				"url": "https://127.0.0.1:8000/api/v1/wines/108"
+				"url": "https://127.0.0.1:8000/api/v1/wines/125"
 			},
 			"response": []
 		},
@@ -152,7 +148,7 @@
 						}
 					}
 				},
-				"url": "https://127.0.0.1:8000/api/v1/wines/109"
+				"url": "https://127.0.0.1:8000/api/v1/wines/139"
 			},
 			"response": []
 		},
@@ -163,7 +159,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"raw": "{\r\n    \"distance\": 100,\r\n    \"date\": \"2025-02-28\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -213,7 +209,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://127.0.0.1:8000/api/v1/sales?customirId=04cdc6af-ef1f-4ac7-82df-6e43bf0a6edd",
+					"raw": "https://127.0.0.1:8000/api/v1/sales?customerId=8af9fe16-6e42-4e25-a685-bf65dfa4aabe",
 					"protocol": "https",
 					"host": [
 						"127",
@@ -229,8 +225,8 @@
 					],
 					"query": [
 						{
-							"key": "customirId",
-							"value": "04cdc6af-ef1f-4ac7-82df-6e43bf0a6edd"
+							"key": "customerId",
+							"value": "8af9fe16-6e42-4e25-a685-bf65dfa4aabe"
 						}
 					]
 				}
@@ -247,14 +243,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "https://127.0.0.1:8000/api/v1/sales/3"
+				"url": "https://127.0.0.1:8000/api/v1/sales/18"
 			},
 			"response": []
 		},
@@ -265,14 +261,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"distance\": 10,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"raw": "{\r\n    \"distance\": 150,\r\n    \"date\": \"2025-02-28\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "https://127.0.0.1:8000/api/v1/sales/1"
+				"url": "https://127.0.0.1:8000/api/v1/sales/18"
 			},
 			"response": []
 		},
@@ -283,14 +279,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"distance\": 10\r\n}",
+					"raw": "{\r\n    \"distance\": 150\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "https://127.0.0.1:8000/api/v1/sales/1"
+				"url": "https://127.0.0.1:8000/api/v1/sales/34"
 			},
 			"response": []
 		},
@@ -308,7 +304,165 @@
 						}
 					}
 				},
-				"url": "https://127.0.0.1:8000/api/v1/sales/2"
+				"url": "https://127.0.0.1:8000/api/v1/sales/16"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}/items",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"drinkId\": 129,\r\n    \"quantity\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/19/items"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}/items (vários)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"drinkId\": 140,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"drinkId\": 141,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/34/items"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}/items (FormHtml)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "items[0][drinkId]",
+							"value": "92",
+							"type": "text"
+						},
+						{
+							"key": "items[0][quantity]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "items[1][drinkId]",
+							"value": "93",
+							"type": "text"
+						},
+						{
+							"key": "items[1][quantity]",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "items[2][drinkId]",
+							"value": "94",
+							"type": "text"
+						},
+						{
+							"key": "items[2][quantity]",
+							"value": "5",
+							"type": "text"
+						}
+					]
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/3/items"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}/items",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/34"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}/items/{id}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/18/items/42"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}/items/{id}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"quantity\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/34/items/48"
+			},
+			"response": []
+		},
+		{
+			"name": "/sales/{id}/items/{id}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"distance\": 101,\r\n    \"date\": \"2025-02-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://127.0.0.1:8000/api/v1/sales/34/items/51"
 			},
 			"response": []
 		}
