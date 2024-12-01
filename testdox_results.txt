@@ -12,3 +12,12 @@ Wine (App\Tests\Entity\Wine)
  [x] Type of data fields
  [x] Nullable fields
 
+Property Query Filter Trait Test Php (App\Tests\Trait\PropertyQueryFilterTraitTestPhp)
+ [x] Something
+
+Request Data Trait (App\Tests\Trait\RequestDataTrait)
+ [x] Get request data with valid json
+ [x] Get request data with invalid json
+ [x] Get request data with form data
+ [x] Get request data with empty data
+
