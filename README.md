@@ -21,4 +21,5 @@
 * O `app` provavelmente estará rodando em https://127.0.0.1:8000
 
 ### Para testes
-> Se usado o `Postman`, uma collection com as rotas está [diponível aqui](#)
+> Se usado o `Postman`, uma collection com as rotas e dados exemplos está [disponível aqui](https://github.com/bechaire/adega/blob/main/postman_collection.json)
+* Executar o `./run-tests.sh`
