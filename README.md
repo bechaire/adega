@@ -38,7 +38,7 @@ docker ps
 ```
 * O container do PostgreSQL iniciará na porta `32370` do localhost
 * O `app` provavelmente estará rodando em https://127.0.0.1:8000
-* O script `start.sh` e o script `stop.sh`, só servem para parar e inicar o webserver e o container do banco de dados
+* O script `start.sh` e o script `stop.sh`, só servem para parar e inicar o webserver e o container do banco de dados depois do processo acima ser realizado a primeira vez
 * O script `run-tests.sh` faz rodar os testes do **PHPUnit**
 
 ### Para testes

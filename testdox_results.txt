@@ -1,3 +1,7 @@
+Wine Controller (App\Tests\Controller\WineController)
+ [x] Get wine success
+ [x] Create wine success
+
 Sale Dto (App\Tests\Dto\SaleDto)
  [x] Valid sale dto
  [x] Invalid distance
