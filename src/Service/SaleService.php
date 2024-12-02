@@ -104,7 +104,7 @@ final class SaleService
      */
     public function calculateTotals(Sale $sale): void
     {
-        # OBS: sem sucesso, tentei criar subselects, acredito que tenha uma forma melhor, mas talvez só com sql (o que está fora do escopo)
+        # OBS: sem sucesso tentei criar subselects, acredito que tenha uma forma melhor, mas talvez só com sql (o que está fora do escopo)
         $dqlWeight = <<< DQL
             SELECT COALESCE(SUM(item.weight_kg * item.quantity), 0) 
             FROM App\Entity\SaleItem item 
